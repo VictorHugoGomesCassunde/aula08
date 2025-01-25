@@ -3,6 +3,10 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Button} from "@mui/material";
 import { Link } from "react-router-dom";
+import Header from "../components/Header";
+import DeleteIcon from '@mui/icons-material/Delete';
+import LoopIcon from '@mui/icons-material/Loop';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 export default function Home() {
 
@@ -20,20 +24,22 @@ export default function Home() {
     }
     buscarUsuario();
   }, []);
- const removerPessoa = async (id) => {
-  try{
-    await fetch("http://localhost:3000/usuarios/" + id, {
-      method: "DELETE",
-    });
-  } catch{
-    alert("não fui viu!");
-  }
- };
-
+  const removerPessoa = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/usuarios/  ${id}`, {
+        method: "DELETE",
+      });
+      
+      setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== id));
+    } catch {
+      alert("Erro ao excluir usuário!");
+    }
+  };
+  
  const exportarPDF = () => {
   const doc = new jsPDF();
 
-  const tabela = usuarios.map(usuario => [
+  const tabela = usuarios.map((usuario) => [
     usuario.id,
     usuario.nome,
     usuario.email,
@@ -46,54 +52,45 @@ export default function Home() {
     body: tabela,                    // Dados da tabela
     
   });
-  const nomeInput = document.getElementById("nomeInput")?.value || "Não informado";
-  const emailInput = document.getElementById("emailInput")?.value || "Não informado";
-
-  doc.text("Informações do usuario:", 10, doc.lastAutoTable.finalY + 10); // Adiciona após a tabela
-  doc.text(`Nome: ${nomeInput}`, 10, doc.lastAutoTable.finalY + 20);
-  doc.text(`E-mail: ${emailInput}`, 10, doc.lastAutoTable.finalY + 30);
-
-
   doc.save("usuarios.pdf"); // Nome do arquivo PDF
 };
-
-    return (
+    return ( 
       
       <div>
-        <Button variant="contained" onClick={()=> exportarPDF()}>
-          Gerar PDF
-        </Button>
+       
+        <Header />
+        
+        <h1>Banco NU</h1>
 
-        <table>
-  <thead>
+        <Button variant="contained" onClick={()=> exportarPDF()}style={{ maxWidth: "150px"}}>
+          <PictureAsPdfIcon/>
+        </Button>
+        <table className="tabela">
+        <thead>
     <tr>
       <th>Nome</th>
       <th>E-mail</th>
+      <th>Ações</th>
     </tr>
-
-    <div>
-  <input id="nomeInput" type="nome" placeholder="Digite o Nome" />
-  <input id="emailInput" type="email" placeholder="Digite o E-mail" />
-</div>
-
   </thead>
-  
   <tbody>
     {usuarios.map((usuario) => (
       <tr key={usuario.id}>
         <td>{usuario.nome}</td>
         <td>{usuario.email}</td>
         <td>
-          <button onClick={() => removerPessoa(usuario.id)}>Excluir</button>
+        <button onClick={() => removerPessoa(usuario.id)}>
+  <DeleteIcon />
+</button>
           <Link to={'/alterar/' + usuario.id}>
-            <button>Alterar</button>
+            <button><LoopIcon/></button>
           </Link>
-          
         </td>
       </tr>
     ))}
   </tbody>
 </table>
-    </div>
+</div>
+   
   );
 }

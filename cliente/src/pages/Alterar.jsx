@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Header from "../components/Header";
+import LoopIcon from '@mui/icons-material/Loop';
 
 export default function Alterar() {
 
@@ -32,16 +34,31 @@ export default function Alterar() {
                     })
                 }
             );
+            alert('alterar com sucesso');
             navigation('/');
         }catch{
             alert('Erro ao alterar');
         }
     }
     return (
-        <form onSubmit={alterar}>
-            <input type="text" value={nome} onChange={(evento)=> setNome(evento.target.value)}/>
-            <input type="text" value={email}onChange={(evento)=> setEmail(evento.target.value)}/>
-            <button>Alterar</button>
+        <div>
+        <Header /> 
+        <h1>Alterar Usuário</h1>
+        <form onSubmit={alterar} className="formulario">
+          <input
+            type="text"
+            value={nome}
+            placeholder="Alterar nome"
+            onChange={(evento) => setNome(evento.target.value)}
+          />
+          <input
+            type="text"
+            value={email}
+             placeholder="Alterar email"
+            onChange={(evento) => setEmail(evento.target.value)}
+          />
+          <button><LoopIcon/></button>
         </form>
+      </div>
     );
 }
