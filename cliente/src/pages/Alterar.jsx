@@ -9,6 +9,9 @@ export default function Alterar() {
 
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
+    const [data, setData] = useState('');
+    const [valor, setValor] = useState('');
+
     const navigation = useNavigate();
 
     useEffect(() => {
@@ -17,6 +20,8 @@ export default function Alterar() {
             const dados = await resposta.json();
             setNome(dados.nome);
             setEmail(dados.email);
+            setData(dados.data);
+            setValor(dados.valor);
         }
         busca();
     } ,[]);
@@ -30,11 +35,13 @@ export default function Alterar() {
                     headers: { 'Content-Type': 'Application/json'},
                     body: JSON.stringify({
                         nome: nome,
-                        email: email
+                        email: email,
+                        data: data,
+                        valor: valor
                     })
                 }
             );
-            alert('alterar com sucesso');
+            alert('alterar com sucesso✅');
             navigation('/');
         }catch{
             alert('Erro ao alterar');
@@ -57,6 +64,17 @@ export default function Alterar() {
              placeholder="Alterar email"
             onChange={(evento) => setEmail(evento.target.value)}
           />
+          <input
+            type="date"
+            value={data}
+             placeholder="Alterar data"
+            onChange={(evento) => setData(evento.target.value)}
+          />
+           <input 
+  type="number" value={valor} placeholder="Coloque o valor da transferência" onChange={(event) => { const novoValor = Number(event.target.value);
+    if (novoValor > 0 || event.target.value === "") { // Permite valores maiores que 0
+      setValor(event.target.value);
+    }}}/>
           <button><LoopIcon/></button>
         </form>
       </div>

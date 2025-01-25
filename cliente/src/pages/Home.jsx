@@ -26,15 +26,16 @@ export default function Home() {
   }, []);
   const removerPessoa = async (id) => {
     try {
-      await fetch(`http://localhost:3000/usuarios/  ${id}`, {
+      await fetch("http://localhost:3000/usuarios/"  + id, {
         method: "DELETE",
       });
       
       setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== id));
     } catch {
-      alert("Erro ao excluir usuário!");
+      alert("Erro usuário nao removido!");
     }
   };
+  
   
  const exportarPDF = () => {
   const doc = new jsPDF();
@@ -43,26 +44,29 @@ export default function Home() {
     usuario.id,
     usuario.nome,
     usuario.email,
+    usuario.data,
+    usuario.valor
   ]);
 
   doc.text("Lista de Usuários", 10, 10); // Título do PDF
 
   doc.autoTable({
-    head: [["ID", "Nome", "E-mail"]], // Cabeçalho da tabela
+    head: [["ID", "Nome", "E-mail", "Data", "Valor"]], // Cabeçalho da tabela
     body: tabela,                    // Dados da tabela
     
   });
   doc.save("usuarios.pdf"); // Nome do arquivo PDF
 };
+
     return ( 
       
       <div>
        
         <Header />
         
-        <h1>Banco NU</h1>
+        <h1>Planilha de Dívidas</h1>
 
-        <Button variant="contained" onClick={()=> exportarPDF()}style={{ maxWidth: "150px"}}>
+        <Button variant="contained" className="pdf-button" onClick={()=> exportarPDF()} >
           <PictureAsPdfIcon/>
         </Button>
         <table className="tabela">
@@ -70,6 +74,8 @@ export default function Home() {
     <tr>
       <th>Nome</th>
       <th>E-mail</th>
+      <th>Data</th>
+      <th>Valor</th>
       <th>Ações</th>
     </tr>
   </thead>
@@ -78,10 +84,14 @@ export default function Home() {
       <tr key={usuario.id}>
         <td>{usuario.nome}</td>
         <td>{usuario.email}</td>
+        <td>{usuario.data || "Sem data"}</td>
+        <td>R$ {usuario.valor || "Sem valor"}</td>
         <td>
+
         <button onClick={() => removerPessoa(usuario.id)}>
   <DeleteIcon />
 </button>
+
           <Link to={'/alterar/' + usuario.id}>
             <button><LoopIcon/></button>
           </Link>

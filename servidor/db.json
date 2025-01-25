@@ -1,3 +1,10 @@
 {
-  "usuarios": []
+  "usuarios": [
+    {
+      "id": "73e0",
+      "nome": "ddsasd",
+      "email": "sdadas@gdad.dgfdf",
+      "data": "2025-01-22"
+    }
+  ]
 }

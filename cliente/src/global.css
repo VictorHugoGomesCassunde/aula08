@@ -1,13 +1,16 @@
 body {
-    background: linear-gradient(rgb(155, 155, 155), rgb(170, 170, 170))no-repeat;  
+    background: rgb(170, 170, 170);
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif; 
+    font-family: Arial, sans-serif;
+    height: 100vh; /* Garante que o fundo cobre toda a tela */
 }
 .header-nav {
-    width: auto;
-    background-color: rgb(170, 170, 170);
-    padding: 10px 20px;
+    width: 100%;
+    background-color: rgb(241, 241, 241);
+    padding: 5px 0px;
+    display: flex;
+    justify-content: flex-end; /* Move os itens para a direita */
 }
 
 .header-menu {
@@ -15,9 +18,7 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-direction: row; 
-    justify-content: space-between; 
-    align-items: center;
+    gap: 20px; /* Espaçamento entre os itens */
 }
 .header-menu li a {
     text-decoration: none;
@@ -47,3 +48,9 @@ body {
     padding: 8px;
     text-align: left;
   }
+  .pdf-button {
+    max-width: 150px;
+    width: 100%; 
+}
+
+
