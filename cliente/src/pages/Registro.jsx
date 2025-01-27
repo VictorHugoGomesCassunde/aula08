@@ -44,7 +44,7 @@ export default function Registro() {
         <input type="date" value={data} placeholder="Coloque a data a pagar" onChange={(event) => setData(event.target.value)} />
         <input 
   type="number" value={valor} placeholder="Coloque o valor da transferência" onChange={(event) => { const novoValor = Number(event.target.value);
-    if (novoValor > 0 || event.target.value === "") { // Permite valores maiores que 0
+    if (novoValor > 0 || event.target.value === "") { // faz que apareça apenas valores maiores que 0
       setValor(event.target.value);
     }}}/>
         

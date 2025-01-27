@@ -18,7 +18,7 @@ app.post('/usuarios', (req, res) => {
         id: usuarios.length + 1, 
         nome, 
         email, 
-        data: data || new Date().toISOString().split('T')[0], // Se "data" não for enviada, use a data atual
+        data: data || new Date().toISOString().split('T')[0], // Se "data" não for enviada, ele vai usar a data atual (●'◡'●)
         valor,
         pagamento
     };

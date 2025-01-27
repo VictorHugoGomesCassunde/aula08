@@ -23,8 +23,7 @@ export default function Alterar() {
                 setEmail(dados.email);
                 setData(dados.data);
                 setValor(dados.valor);
-                setPagamento(dados.pagamento); // Corrigido: Agora está pegando o pagamento correto
-
+                setPagamento(dados.pagamento); 
             } catch (error) {
                 alert("Erro ao carregar dados");
             }

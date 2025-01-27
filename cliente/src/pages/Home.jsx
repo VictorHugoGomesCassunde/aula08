@@ -55,7 +55,7 @@ export default function Home() {
     doc.text("Lista de Dívidas", 10, 10); // Título do PDF
 
     doc.autoTable({
-      head: [["ID", "Nome", "E-mail", "Data", "Valor", "Forma de Pagamento"]], // Cabeçalho da tabela
+      head: [["ID", "Nome", "E-mail", "Data", "Valor", "Forma de Pagamento"]], // é o cabeçalho da tabela
       body: tabela,                    // Dados da tabela
 
     });
@@ -63,7 +63,7 @@ export default function Home() {
   };
 
   const ordenarUsuarios = (criterio) => {
-    let usuariosOrdenados = [...usuarios]; // Sempre partimos da lista original
+    let usuariosOrdenados = [...usuarios]; // usando partimos da lista original
   
     if (criterio === "AZ") {
       usuariosOrdenados.sort((a, b) => a.nome.localeCompare(b.nome));
@@ -79,7 +79,7 @@ export default function Home() {
       usuariosOrdenados.sort((a, b) => new Date(a.data || 0) - new Date(b.data || 0));
     }
   
-    setFilteredUsuarios(usuariosOrdenados); // Atualiza o estado com a nova lista ordenada
+    setFilteredUsuarios(usuariosOrdenados); // Atualiza o estado com a nova lista ordenada ╰(*°▽°*)╯
   };
   
 
