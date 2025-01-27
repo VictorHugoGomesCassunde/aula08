@@ -3,14 +3,14 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    height: 100vh; /* Garante que o fundo cobre toda a tela */
+    height: 100vh; 
 }
 .header-nav {
     width: 100%;
     background-color: rgb(241, 241, 241);
     padding: 5px 0px;
     display: flex;
-    justify-content: flex-end; /* Move os itens para a direita */
+    justify-content: flex-end; 
 }
 
 .header-menu {
@@ -18,7 +18,7 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 20px; /* Espaçamento entre os itens */
+    gap: 20px; 
 }
 .header-menu li a {
     text-decoration: none;
@@ -51,6 +51,23 @@ body {
   .pdf-button {
     max-width: 150px;
     width: 100%; 
+}
+.filter-buttons {
+  margin: 20px 0;
+  text-align: center; /* Centraliza o botão */
+}
+
+.filter-buttons button {
+  background: rgb(78, 78, 80);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px; /* Bordas arredondadas */
+  cursor: pointer;
+  margin: 5px; /* Espaço entre os botões */
+}
+h1 {
+  text-align: center;
 }
 
 

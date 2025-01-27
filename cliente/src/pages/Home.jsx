@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Button} from "@mui/material";
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,6 +11,7 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 export default function Home() {
 
   const [usuarios, setUsuarios] = useState([]);
+  const [filteredUsuarios, setFilteredUsuarios] = useState([]);
 
   useEffect(() => {
     const buscarUsuario = async () => {
@@ -18,89 +19,121 @@ export default function Home() {
         const resposta = await fetch("http://localhost:3000/usuarios");
         const dados = await resposta.json();
         setUsuarios(dados);
+        setFilteredUsuarios(dados);
       } catch {
         alert('Ocorreu um erro no app!');
       }
     }
     buscarUsuario();
   }, []);
+
   const removerPessoa = async (id) => {
     try {
-      await fetch("http://localhost:3000/usuarios/"  + id, {
+      await fetch("http://localhost:3000/usuarios/" + id, {
         method: "DELETE",
       });
-      
+
       setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== id));
+      setFilteredUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== id));
     } catch {
       alert("Erro usuário nao removido!");
     }
   };
+
+  const exportarPDF = () => {
+    const doc = new jsPDF();
+
+    const tabela = usuarios.map((usuario) => [
+       usuario.id,
+      usuario.nome,
+      usuario.email,
+      usuario.data,
+      usuario.valor,
+      usuario.pagamento
+    ]);
+
+    doc.text("Lista de Dívidas", 10, 10); // Título do PDF
+
+    doc.autoTable({
+      head: [["ID", "Nome", "E-mail", "Data", "Valor", "Forma de Pagamento"]], // Cabeçalho da tabela
+      body: tabela,                    // Dados da tabela
+
+    });
+    doc.save("Dívidas a pagar.pdf"); // Nome do arquivo PDF
+  };
+
+  const ordenarUsuarios = (criterio) => {
+    let usuariosOrdenados = [...usuarios]; // Sempre partimos da lista original
   
+    if (criterio === "AZ") {
+      usuariosOrdenados.sort((a, b) => a.nome.localeCompare(b.nome));
+    } else if (criterio === "ZA") {
+      usuariosOrdenados.sort((a, b) => b.nome.localeCompare(a.nome));
+    } else if (criterio === "MENOR_VALOR") {
+      usuariosOrdenados.sort((a, b) => (a.valor || 0) - (b.valor || 0));
+    } else if (criterio === "MAIOR_VALOR") {
+      usuariosOrdenados.sort((a, b) => (b.valor || 0) - (a.valor || 0));
+    } else if (criterio === "RECENTE") {
+      usuariosOrdenados.sort((a, b) => new Date(b.data || 0) - new Date(a.data || 0));
+    } else if (criterio === "ANTIGO") {
+      usuariosOrdenados.sort((a, b) => new Date(a.data || 0) - new Date(b.data || 0));
+    }
   
- const exportarPDF = () => {
-  const doc = new jsPDF();
+    setFilteredUsuarios(usuariosOrdenados); // Atualiza o estado com a nova lista ordenada
+  };
+  
 
-  const tabela = usuarios.map((usuario) => [
-    usuario.id,
-    usuario.nome,
-    usuario.email,
-    usuario.data,
-    usuario.valor
-  ]);
+  return (
+    <div>
+      <Header />
 
-  doc.text("Lista de Usuários", 10, 10); // Título do PDF
+      <h1>Planilha de Dívidas</h1>
 
-  doc.autoTable({
-    head: [["ID", "Nome", "E-mail", "Data", "Valor"]], // Cabeçalho da tabela
-    body: tabela,                    // Dados da tabela
-    
-  });
-  doc.save("usuarios.pdf"); // Nome do arquivo PDF
-};
+      <Button variant="contained" className="pdf-button" onClick={() => exportarPDF()} >
+        <PictureAsPdfIcon />
+      </Button>
 
-    return ( 
-      
-      <div>
-       
-        <Header />
-        
-        <h1>Planilha de Dívidas</h1>
+      <div className="filter-buttons">
+        <Button onClick={() => ordenarUsuarios("AZ")}>A-Z</Button>
+        <Button onClick={() => ordenarUsuarios("ZA")}>Z-A</Button>
+        <Button onClick={() => ordenarUsuarios("MENOR_VALOR")}>Menor Valor</Button>
+        <Button onClick={() => ordenarUsuarios("MAIOR_VALOR")}>Maior Valor</Button>
+        <Button onClick={() => ordenarUsuarios("RECENTE")}>Mais Recentes</Button>
+        <Button onClick={() => ordenarUsuarios("ANTIGO")}>Mais Antigos</Button>
+      </div>
 
-        <Button variant="contained" className="pdf-button" onClick={()=> exportarPDF()} >
-          <PictureAsPdfIcon/>
-        </Button>
-        <table className="tabela">
+      <table className="tabela">
         <thead>
-    <tr>
-      <th>Nome</th>
-      <th>E-mail</th>
-      <th>Data</th>
-      <th>Valor</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {usuarios.map((usuario) => (
-      <tr key={usuario.id}>
-        <td>{usuario.nome}</td>
-        <td>{usuario.email}</td>
-        <td>{usuario.data || "Sem data"}</td>
-        <td>R$ {usuario.valor || "Sem valor"}</td>
-        <td>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Data</th>
+            <th>Valor</th>
+            <th>Forma de pagamento</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsuarios.map((usuario) => (
+            <tr key={usuario.id}>
+              <td>{usuario.nome}</td>
+              <td>{usuario.email}</td>
+              <td>{usuario.data}</td>
+              <td>R$ {usuario.valor || "Sem valor"}</td>
+              <td>{usuario.pagamento || "Sem forma de pagamento"}</td>
+              <td>
+                <button onClick={() => removerPessoa(usuario.id)}>
+                  <DeleteIcon />
+                </button>
 
-        <button onClick={() => removerPessoa(usuario.id)}>
-  <DeleteIcon />
-</button>
-
-          <Link to={'/alterar/' + usuario.id}>
-            <button><LoopIcon/></button>
-          </Link>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-</div>
-   
+                <Link to={'/alterar/' + usuario.id}>
+                  <button><LoopIcon /></button>
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ app.use(cors());
 let usuarios = [];
 
 app.post('/usuarios', (req, res) => {
-    const { nome, email, data, valor } = req.body; // Inclua o campo "data"
+    const { nome, email, data, valor, pagamento } = req.body; 
 
     if (!nome || !email) {
         return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
@@ -19,7 +19,8 @@ app.post('/usuarios', (req, res) => {
         nome, 
         email, 
         data: data || new Date().toISOString().split('T')[0], // Se "data" não for enviada, use a data atual
-        valor
+        valor,
+        pagamento
     };
 
     usuarios.push(novoUsuario);
@@ -43,7 +44,7 @@ app.get('/usuarios/:id', (req, res) => {
 
 app.put('/usuarios/:id', (req, res) => {
     const { id } = req.params;
-    const { nome, email, data, valor } = req.body; // Inclua "data" na atualização
+    const { nome, email, data, valor, pagamento } = req.body;
     
     const usuario = usuarios.find(u => u.id === parseInt(id));
     
@@ -53,8 +54,9 @@ app.put('/usuarios/:id', (req, res) => {
     
     usuario.nome = nome || usuario.nome;
     usuario.email = email || usuario.email;
-    usuario.data = data || usuario.data; // Atualize "data" se enviada
+    usuario.data = data || usuario.data; 
     usuario.valor = valor || usuario.valor;
+    usuario.pagamento = pagamento || usuario.pagamento;
     
     res.status(200).json(usuario);
 });
